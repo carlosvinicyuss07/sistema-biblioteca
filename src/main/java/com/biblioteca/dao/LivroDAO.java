@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LivroDAO {
 
@@ -38,6 +40,31 @@ public class LivroDAO {
             System.out.println("Ocorreu um erro ao acessar o banco: " + e.getMessage());
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public List<Livro> listarTodosLivros() throws SQLException {
+
+        String sql = "SELECT id, titulo, autor, isbn, ano_publicacao, disponivel FROM livros";
+        try (Connection conexao = Conexao.getConnection();
+             PreparedStatement statement = conexao.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+
+            List<Livro> livros = new ArrayList<>();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String titulo = rs.getString("titulo");
+                String autor = rs.getString("autor");
+                String isbn = rs.getString("isbn");
+                int anoPublicacao = rs.getInt("ano_publicacao");
+                boolean disponivel = rs.getBoolean("disponivel");
+                Livro livro = new Livro(id, titulo, autor, isbn, anoPublicacao, disponivel);
+
+                livros.add(livro);
+            }
+            return livros;
+
         }
     }
 }
