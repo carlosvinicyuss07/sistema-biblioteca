@@ -17,9 +17,10 @@ public class SistemaBibliotecaApp {
         LivroDAO livroDAO1 = new LivroDAO();
 
         // testando o metodo salvarLivro(Livro livro) da Classe LivroDAO
-        /*boolean salvo = livroDAO1.salvarLivro(livro5);
+        /*
+        boolean salvo = livroDAO1.salvarLivro(livro2);
         if (salvo) {
-            System.out.println("Livro 1 salvo com ID: " + livro1.getId());
+            System.out.println("Livro 2 salvo com ID: " + livro1.getId());
         } else {
             System.out.println("Falha ao salvar Livro 1.");
         }*/
@@ -27,6 +28,31 @@ public class SistemaBibliotecaApp {
         for (Livro livro : livroDAO1.listarTodosLivros()) {
             System.out.println(livro);
         }
+
+        Livro livroParaAtualizar = new Livro(
+                1,
+                "A Arte da Guerra",             // Título
+                "Sun Tzu",                      // Autor
+                "978-857676-583-6",             // ISBN único (verificado para ser diferente dos anteriores)
+                500,                            // Ano de Publicação (aproximado)
+                true                            // Disponível
+        );
+
+        System.out.println(livroDAO1.buscarLivroPorIsbn("978-857676-583-6"));
+
+        /*
+        if (livroDAO1.updateLivro(livroParaAtualizar)) {
+            System.out.println("Livro 1 atualizado com ID: " + livroParaAtualizar.getId());
+        } else {
+            System.out.println("Falha ao atualizar livro.");
+        }*/
+
+        /*
+        if (livroDAO1.excluirLivro(3)) {
+            System.out.println("Livro 2 excluído com sucesso!");
+        } else {
+            System.out.println("Falha ao remover livro.");
+        }*/
 
     }
 }

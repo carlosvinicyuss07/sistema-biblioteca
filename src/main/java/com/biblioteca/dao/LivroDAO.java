@@ -67,4 +67,89 @@ public class LivroDAO {
 
         }
     }
+
+    public boolean updateLivro(Livro livro) throws SQLException {
+
+        String sql = "UPDATE livros SET titulo = ?, autor = ?, isbn = ?, ano_publicacao = ?, disponivel = ? WHERE id = ?;";
+        try (Connection conexao = Conexao.getConnection();
+             PreparedStatement statement = conexao.prepareStatement(sql)) {
+
+            statement.setString(1, livro.getTitulo());
+            statement.setString(2, livro.getAutor());
+            statement.setString(3, livro.getIsbn());
+            statement.setInt(4, livro.getAnoPublicacao());
+            statement.setBoolean(5, livro.isDisponivel());
+            statement.setInt(6, livro.getId());
+
+            int linhasAfetadas = statement.executeUpdate();
+            return linhasAfetadas > 0;
+
+        }
+    }
+
+    public boolean excluirLivro(int id) throws SQLException {
+
+        String sql = "DELETE FROM livros WHERE id = ?;";
+        try (Connection conexao = Conexao.getConnection();
+             PreparedStatement statement = conexao.prepareStatement(sql)) {
+
+            statement.setInt(1, id);
+
+            int linhasAfetadas = statement.executeUpdate();
+            return linhasAfetadas > 0;
+
+        }
+    }
+
+    public Livro buscarLivroPorId(int id) throws SQLException {
+
+        String sql = "SELECT id, titulo, autor, isbn, ano_publicacao, disponivel " +
+                "FROM livros WHERE id = ?;";
+        try (Connection conexao = Conexao.getConnection();
+             PreparedStatement statement = conexao.prepareStatement(sql)) {
+
+            statement.setInt(1, id);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    int idLivro = rs.getInt("id");
+                    String titulo = rs.getString("titulo");
+                    String autor = rs.getString("autor");
+                    String isbn = rs.getString("isbn");
+                    int anoPublicacao = rs.getInt("ano_publicacao");
+                    boolean disponivel = rs.getBoolean("disponivel");
+
+                    Livro livroEncontrado = new Livro(idLivro, titulo, autor, isbn, anoPublicacao, disponivel);
+                    return livroEncontrado;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Livro buscarLivroPorIsbn(String isbn) throws SQLException {
+
+        String sql = "SELECT id, titulo, autor, isbn, ano_publicacao, disponivel " +
+                "FROM livros WHERE isbn = ?;";
+        try (Connection conexao = Conexao.getConnection();
+             PreparedStatement statement = conexao.prepareStatement(sql)) {
+
+            statement.setString(1, isbn);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    int id = rs.getInt("id");
+                    String titulo = rs.getString("titulo");
+                    String autor = rs.getString("autor");
+                    String isbnLivro = rs.getString("isbn");
+                    int anoPublicacao = rs.getInt("ano_publicacao");
+                    boolean disponivel = rs.getBoolean("disponivel");
+
+                    Livro livroEncontrado = new Livro(id, titulo, autor, isbnLivro, anoPublicacao, disponivel);
+                    return livroEncontrado;
+                }
+            }
+        }
+        return null;
+    }
 }
